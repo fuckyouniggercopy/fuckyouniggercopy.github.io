@@ -1,317 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <title>Willow FHD</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" crossorigin="anonymous">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: auto !important;
-            -webkit-user-select: auto !important;
-        }
+ <meta charset="UTF-8">
+  <title>Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  
+  <!-- Disable Dev Tools -->
+  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
 
-        body {
-            background-color: #000;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
-        }
+  <!-- Prevent Copy, Cut, Paste, Right-click -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://abinmg.github.io/krypto/new.css">
+  <script>
+    $(document).ready(function () {
+      $('body').bind('cut copy paste', function (e) {
+        e.preventDefault();
+      });
+      $(".code").on("contextmenu", function (e) {
+        return false;
+      });
+    });
+  </script>
 
-        #player-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            background-color: #000;
-        }
-
-        .shaka-video-container {
-            width: 100% !important;
-            height: 100% !important;
-            position: relative !important;
-            background-color: #000;
-        }
-
-        .shaka-video {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
-            background-color: #000;
-        }
-
-        /* Fix control visibility and positioning */
-        .shaka-controls-container {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 1000 !important;
-        }
-
-        .shaka-bottom-controls {
-            background: linear-gradient(transparent, rgba(0,0,0,0.7)) !important;
-            padding: 20px 15px 15px !important;
-        }
-
-        .shaka-controls-button-panel {
-            display: flex !important;
-            align-items: center !important;
-            gap: 10px !important;
-        }
-
-        .shaka-range-container {
-            margin: 10px 0 !important;
-        }
-
-        .shaka-seek-bar {
-            height: 4px !important;
-            cursor: pointer !important;
-        }
-
-        /* Improve button styling */
-        .shaka-controls-container button {
-            border: none !important;
-            background: transparent !important;
-            color: #fff !important;
-            cursor: pointer !important;
-            padding: 8px !important;
-            border-radius: 4px !important;
-            transition: background-color 0.2s ease !important;
-        }
-
-        .shaka-controls-container button:hover {
-            background-color: rgba(255,255,255,0.1) !important;
-        }
-
-        .shaka-current-time {
-            font-size: 14px !important;
-            color: #fff !important;
-            min-width: 60px !important;
-            text-align: left !important;
-        }
-
-        .shaka-spacer {
-            flex-grow: 1 !important;
-        }
-
-        /* Fix overflow menu */
-        .shaka-overflow-menu {
-            background: rgba(0,0,0,0.9) !important;
-            border-radius: 8px !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-        }
-
-        .shaka-settings-menu {
-            background: rgba(0,0,0,0.9) !important;
-            border-radius: 8px !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-        }
+  <!-- JW Player -->
 
 
+  <script src="//ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
+  <script>jwplayer.key = "XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo";</script>
 
-        /* Play button styling */
-        .shaka-play-button-container {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 998 !important;
-        }
-
-        .shaka-play-button {
-            width: 80px !important;
-            height: 80px !important;
-            border-radius: 50% !important;
-            background: rgba(255,255,255,0.9) !important;
-            border: none !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 32px !important;
-            color: #000 !important;
-            transition: all 0.2s ease !important;
-        }
-
-        .shaka-play-button:hover {
-            background: rgba(255,255,255,1) !important;
-            transform: scale(1.1) !important;
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .shaka-bottom-controls {
-                padding: 15px 10px 10px !important;
-            }
-            
-            .shaka-controls-button-panel {
-                gap: 5px !important;
-            }
-            
-            .shaka-controls-container button {
-                padding: 6px !important;
-                font-size: 14px !important;
-            }
-            
-            .shaka-current-time {
-                font-size: 12px !important;
-                min-width: 50px !important;
-            }
-            
-            .shaka-play-button {
-                width: 60px !important;
-                height: 60px !important;
-                font-size: 24px !important;
-            }
-        }
-
-        /* Error message styling */
-        #message {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            z-index: 2000;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* Hide unwanted elements */
-        .shaka-hidden {
-            display: none !important;
-        }
-
-        /* Ensure fullscreen works properly */
-        .shaka-video-container:fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-        }
-
-        .shaka-video-container:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-        }
-
-        .shaka-video-container:-moz-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-        }
-    </style>
+  <!-- Fullscreen Styling -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    #playerjxJRqLMFuJaA {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+    #joinBtn {
+      position: absolute;
+      z-index: 200;
+      top: 10px;
+      left: 16px;
+      color: #ccc;
+      border: 2px solid #ccc;
+      padding: 2px 6px;
+      border-radius: 2px;
+      background: rgba(0, 0, 0, 0.5);
+      font-family: Arial, sans-serif;
+      font-size: 19px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
 </head>
+
+
+
 <body>
-    <div id="player-container">
-        <div data-shaka-player-container="" class="shaka-video-container" shaka-controls="true">
-            <video autoplay="true" data-shaka-player="" id="video" poster="" class="shaka-video"></video>
-        </div>
-    </div>
-
-    <script>
-        const manifestUri = "https://dash2.antik.sk/stream/nvidia_sport_1/playlist_cenc.mpd";
-        
-        async function init() {
-            try {
-                const video = document.getElementById('video');
-                const ui = video['ui'];
-                const controls = ui.getControls();
-                const player = controls.getPlayer();
-
-                window.player = player;
-                window.ui = ui;
-
-                // Configure player with DRM
-                player.configure({
-                    drm: {
-                        "clearKeys": {
-                            "11223344556677889900112233445566": "4b80724d0ef86bcb2c21f7999d67739d"
-                        }
-                    },
-                    streaming: {
-                        rebufferingGoal: 2,
-                        bufferingGoal: 10,
-                        bufferBehind: 30
-                    }
-                });
-
-                // Add event listeners
-                player.addEventListener('error', onPlayerErrorEvent);
-                controls.addEventListener('error', onUIErrorEvent);
-                
-                // Load the manifest
-                await player.load(manifestUri);
-                console.log('Video loaded successfully!');
-                
-                // Hide any loading messages
-                const messageEl = document.getElementById('message');
-                if (messageEl) {
-                    messageEl.style.display = 'none';
-                }
-                
-            } catch (error) {
-                onPlayerError(error);
-            }
-        }
-
-        function onPlayerErrorEvent(errorEvent) {
-            onPlayerError(errorEvent.detail);
-        }
-
-        function onPlayerError(error) {
-            console.error('Player Error:', error.code, error);
-            showErrorMessage(`Error: ${error.message || 'Unable to load video'}`);
-        }
-
-        function onUIErrorEvent(errorEvent) {
-            onPlayerError(errorEvent.detail);
-        }
-
-        function initFailed(errorEvent) {
-            console.error('Failed to load Shaka Player UI!');
-            showErrorMessage('Failed to initialize video player');
-        }
-
-        function showErrorMessage(message) {
-            let messageEl = document.getElementById('message');
-            if (!messageEl) {
-                messageEl = document.createElement('div');
-                messageEl.id = 'message';
-                document.body.appendChild(messageEl);
-            }
-            messageEl.innerHTML = `
-                <div style="margin-bottom: 20px; font-size: 24px;">⚠️</div>
-                <div>${message}</div>
-                <div style="margin-top: 20px; font-size: 14px; opacity: 0.7;">Please refresh the page or try again later</div>
-            `;
-            messageEl.style.display = 'flex';
-        }
-
-        // Initialize when Shaka UI is loaded
-        document.addEventListener('shaka-ui-loaded', init);
-        document.addEventListener('shaka-ui-load-failed', initFailed);
-
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', function() {
-            if (window.player) {
-                if (document.hidden) {
-                    window.player.pause();
-                } else {
-                    window.player.play();
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+  <div id="b4x"></div>
+  <script>
+    jwplayer("b4x").setup({
+      file: "https://dca-co-live-gcr.gcdn.co/1qbi21i8jfsc31vt8jbym82kjy/tv25f/stream.mpd?channel=2650&outlet=dazn-row&plang=en",
+      controls: true,
+     image: "",
+                title: "",
+      logo: {
+        file: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQGbgHbZ_TtUyVHjqNTfmQD05FkyoFxZyx3g&s",
+                link: "",
+                hide: "false",
+                position: "control-bar"
+            },
+      width: "100%",
+      height: "100%",
+      stretching: '',
+      autostart: false,
+      androidhls: true
+    });
+  </script>
