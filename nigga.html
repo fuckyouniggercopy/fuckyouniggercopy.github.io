@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+
+  <!-- Disable Dev Tools -->
+  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+
+  <!-- Prevent Copy, Cut, Paste, Right-click -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://abinmg.github.io/krypto/new.css">
+  <script>
+    $(document).ready(function () {
+      $('body').bind('cut copy paste', function (e) {
+        e.preventDefault();
+      });
+      $(".code").on("contextmenu", function (e) {
+        return false;
+      });
+    });
+  </script>
+
+  <!-- JW Player -->
+  <script src="//ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
+  <script>jwplayer.key = "XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo";</script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    #b4x {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="b4x"></div>
+
+<script>
+  function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
+
+  const base64EncodedFile = getQueryParam('get');
+  const decodedFile = base64EncodedFile ? atob(base64EncodedFile) : '';
+
+  jwplayer("b4x").setup({
+    file: decodedFile || "https://dca-co-live-gcr.gcdn.co/16j9f82ngcdd81az1lr1xxlz3h/tv25f/stream.mpd?channel=2651&outlet=dazn-row&plang=en",
+    controls: true,
+    image: "",
+    title: "",
+    logo: {
+      file: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQGbgHbZ_TtUyVHjqNTfmQD05FkyoFxZyx3g&s",
+      link: "",
+      hide: false,
+      position: "control-bar"
+    },
+    width: "100%",
+    height: "100%",
+    stretching: '',
+    autostart: false,
+    androidhls: true
+  });
+</script>
+
+</body>
+</html>
+
