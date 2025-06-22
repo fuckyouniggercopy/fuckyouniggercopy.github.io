@@ -35,35 +35,9 @@
 
 </div>
 
----
 
-## 📋 BEFORE YOU EVEN THINK ABOUT IT...
 
-<div align="center">
 
-| ❌ DON'T DO | ✅ DO INSTEAD |
-|-------------|---------------|
-| Copy-paste my entire codebase | Learn the concepts and implement yourself |
-| Submit my work as your assignment | Use it as reference and build your own |
-| Fork and rebrand as yours | Fork, contribute, and give credit |
-| Steal without attribution | Star the repo and reference properly |
-
-</div>
-
----
-
-## 🎯 ANTI-COPY MEASURES ACTIVATED
-
-<div align="center">
-
-```
-⚡ Code is watermarked
-🔍 Plagiarism detection enabled  
-📊 Usage tracking active
-⚖️ Legal action ready
-```
-
-</div>
 
 ### 🚀 Want to Use This Code Properly?
 
